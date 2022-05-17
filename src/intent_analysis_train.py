@@ -16,6 +16,7 @@ from keras.layers import Dense, LSTM, Bidirectional, Embedding, Dropout
 from keras.callbacks import ModelCheckpoint
 from sklearn.model_selection import train_test_split
 import pickle
+import h5py
 
 nltk.download("stopwords")
 nltk.download("punkt")
@@ -124,12 +125,14 @@ model = create_model(vocab_size, max_length)
 model.compile(loss = "categorical_crossentropy", optimizer = "adam", metrics = ["accuracy"])
 model.summary()
 
-filename = 'model.h5'
+filename = 'pickles/model.h5'
 checkpoint = ModelCheckpoint(filename, monitor='val_loss', verbose=1, save_best_only=True, mode='min')
 
-hist = model.fit(train_X, train_Y, epochs = 100, batch_size = 16, validation_data = (val_X, val_Y), callbacks = [checkpoint])
+hist = model.fit(train_X, train_Y, epochs = 250, batch_size = 16, validation_data = (val_X, val_Y), callbacks = [checkpoint])
 
-model = load_model("pickles/model.h5")
+# f = h5py.File('pickles/model.h5','r')
+# model = load_model(f)
+
 
 # summarize history for accuracy
 plt.plot(hist.history['accuracy'])
